@@ -1,0 +1,610 @@
+﻿import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  crearConfiguracionFamilia,
+  crearConfiguracionInstrumento,
+  crearConfiguracionSeccion,
+  editarConfiguracionFamilia,
+  editarConfiguracionInstrumento,
+  editarConfiguracionSeccion,
+  listarConfiguracionFamilias,
+  listarConfiguracionInstrumentos,
+  listarConfiguracionSecciones,
+} from "../../lib/api";
+import type {
+  ConfiguracionFamilia,
+  ConfiguracionInstrumento,
+  ConfiguracionSeccion,
+} from "../../lib/api";
+import "./Instrumentos.css";
+
+type ModalTipo =
+  | "seccion"
+  | "familia"
+  | "instrumento"
+  | "editar-seccion"
+  | "editar-familia"
+  | "editar-instrumento"
+  | null;
+
+function Instrumentos() {
+  const navigate = useNavigate();
+  const [secciones, setSecciones] = useState<ConfiguracionSeccion[]>([]);
+  const [familias, setFamilias] = useState<ConfiguracionFamilia[]>([]);
+  const [instrumentos, setInstrumentos] = useState<
+    ConfiguracionInstrumento[]
+  >([]);
+
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [modal, setModal] = useState<ModalTipo>(null);
+
+  const [nombre, setNombre] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [seccionId, setSeccionId] = useState("");
+  const [familiaId, setFamiliaId] = useState("");
+  const [seccionEditando, setSeccionEditando] =
+    useState<ConfiguracionSeccion | null>(null);
+  const [familiaEditando, setFamiliaEditando] =
+    useState<ConfiguracionFamilia | null>(null);
+  const [instrumentoEditando, setInstrumentoEditando] =
+    useState<ConfiguracionInstrumento | null>(null);
+
+  async function cargarDatos() {
+    try {
+      setCargando(true);
+      setError(null);
+
+      const [seccionesData, familiasData, instrumentosData] =
+        await Promise.all([
+          listarConfiguracionSecciones(),
+          listarConfiguracionFamilias(),
+          listarConfiguracionInstrumentos(),
+        ]);
+
+      setSecciones(seccionesData);
+      setFamilias(familiasData);
+      setInstrumentos(instrumentosData);
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "No se ha podido cargar la configuración.",
+      );
+    } finally {
+      setCargando(false);
+    }
+  }
+
+  useEffect(() => {
+    void cargarDatos();
+  }, []);
+
+  const seccionesPorFamilia = useMemo(() => {
+    const mapa = new Map<string, ConfiguracionSeccion[]>();
+
+    for (const seccion of secciones) {
+      const actuales = mapa.get(seccion.familiaId) ?? [];
+      actuales.push(seccion);
+      mapa.set(seccion.familiaId, actuales);
+    }
+
+    return mapa;
+  }, [secciones]);
+
+  const instrumentosPorSeccion = useMemo(() => {
+    const mapa = new Map<string, ConfiguracionInstrumento[]>();
+
+    for (const instrumento of instrumentos) {
+      const actuales = mapa.get(instrumento.seccion.id) ?? [];
+      actuales.push(instrumento);
+      mapa.set(instrumento.seccion.id, actuales);
+    }
+
+    return mapa;
+  }, [instrumentos]);
+  function abrirModalSeccion(familia?: ConfiguracionFamilia) {
+    setNombre("");
+    setFamiliaId(familia?.id ?? "");
+    setModal("seccion");
+  }
+
+  function abrirEditarSeccion(seccion: ConfiguracionSeccion) {
+    setNombre(seccion.nombre);
+    setFamiliaId(seccion.familiaId);
+    setSeccionEditando(seccion);
+    setFamiliaEditando(null);
+    setInstrumentoEditando(null);
+    setModal("editar-seccion");
+  }
+
+  function abrirModalFamilia() {
+    setNombre("");
+    setSeccionId("");
+    setModal("familia");
+  }
+
+  function abrirEditarFamilia(familia: ConfiguracionFamilia) {
+    setNombre(familia.nombre);
+    setSeccionId("");
+    setSeccionEditando(null);
+    setFamiliaEditando(familia);
+    setInstrumentoEditando(null);
+    setModal("editar-familia");
+  }
+
+  function abrirModalInstrumento(seccion: ConfiguracionSeccion) {
+    setNombre("");
+    setDescripcion("");
+    setSeccionId(seccion.id);
+    setInstrumentoEditando(null);
+    setModal("instrumento");
+  }
+
+  function abrirEditarInstrumento(instrumento: ConfiguracionInstrumento) {
+    setNombre(instrumento.nombre);
+    setDescripcion(instrumento.descripcion ?? "");
+    setSeccionId(instrumento.seccionId);
+    setInstrumentoEditando(instrumento);
+    setModal("editar-instrumento");
+  }
+  function cerrarModal() {
+    setModal(null);
+    setNombre("");
+    setDescripcion("");
+    setSeccionId("");
+    setFamiliaId("");
+    setSeccionEditando(null);
+    setFamiliaEditando(null);
+    setInstrumentoEditando(null);
+  }
+
+  async function guardar() {
+    try {
+      setError(null);
+
+      if (modal === "familia") {
+        await crearConfiguracionFamilia({
+          nombre: nombre.trim(),
+        });
+      }
+
+      if (modal === "seccion") {
+        await crearConfiguracionSeccion({
+          nombre: nombre.trim(),
+          familiaId,
+        });
+      }
+
+      if (modal === "editar-familia" && familiaEditando) {
+        await editarConfiguracionFamilia(familiaEditando.id, {
+          nombre: nombre.trim(),
+        });
+      }
+
+      if (modal === "editar-seccion" && seccionEditando) {
+        await editarConfiguracionSeccion(seccionEditando.id, {
+          nombre: nombre.trim(),
+          familiaId,
+        });
+      }
+
+      if (modal === "instrumento") {
+        await crearConfiguracionInstrumento({
+          nombre: nombre.trim(),
+          seccionId,
+          descripcion: descripcion.trim() || undefined,
+        });
+      }
+
+      if (modal === "editar-instrumento" && instrumentoEditando) {
+        await editarConfiguracionInstrumento(instrumentoEditando.id, {
+          nombre: nombre.trim(),
+          seccionId,
+          descripcion: descripcion.trim() || undefined,
+          activo: instrumentoEditando.activo,
+        });
+      }
+
+      cerrarModal();
+      await cargarDatos();
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "No se ha podido guardar el cambio.",
+      );
+    }
+  }
+  async function cambiarEstadoInstrumento(
+    instrumento: ConfiguracionInstrumento,
+  ) {
+    const accion = instrumento.activo ? "desactivar" : "activar";
+
+    if (
+      !window.confirm(
+        `¿Quieres ${accion} el instrumento "${instrumento.nombre}"?`,
+      )
+    ) {
+      return;
+    }
+
+    try {
+      setError(null);
+
+      await editarConfiguracionInstrumento(instrumento.id, {
+        nombre: instrumento.nombre,
+        seccionId: instrumento.seccionId,
+        descripcion: instrumento.descripcion ?? undefined,
+        activo: !instrumento.activo,
+      });
+
+      await cargarDatos();
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "No se ha podido cambiar el estado del instrumento.",
+      );
+    }
+  }
+  const tituloModal =
+    modal === "seccion"
+      ? "Nueva sección"
+      : modal === "editar-seccion"
+        ? "Editar sección"
+        : modal === "familia"
+          ? "Nueva familia"
+          : modal === "editar-familia"
+            ? "Editar familia"
+            : modal === "instrumento"
+              ? "Nuevo instrumento"
+              : "Editar instrumento";
+
+  if (cargando) {
+    return (
+      <section className="instrumentos-page">
+        <div className="instrumentos-header">
+          <div>
+            <h1>Instrumentos</h1>
+            <p>
+              Gestión de secciones, familias e instrumentos musicales.
+            </p>
+          </div>
+        </div>
+
+        <div className="instrumentos-feedback">
+          Cargando configuración...
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section className="instrumentos-page">
+      <div className="instrumentos-header">
+        <button
+          type="button"
+          className="instrumentos-back-button"
+          onClick={() => navigate("/configuracion")}
+        >
+          ← Atrás
+        </button>
+
+        <div>
+          <h1>Instrumentos</h1>
+          <p>
+            Gestión de secciones, familias e instrumentos musicales.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          className="instrumentos-primary-button"
+          onClick={abrirModalFamilia}
+        >
+          + Nueva familia
+        </button>
+      </div>
+
+      {error && (
+        <div className="instrumentos-error" role="alert">
+          {error}
+        </div>
+      )}
+
+      {familias.length === 0 ? (
+        <div className="instrumentos-empty">
+          <h2>No hay familias configuradas</h2>
+          <p>
+            Crea la primera familia para comenzar a definir la jerarquía
+            de instrumentos.
+          </p>
+        </div>
+      ) : (
+        <div className="instrumentos-tree">
+          {familias.map((familia) => {
+            const seccionesFamilia =
+              seccionesPorFamilia.get(familia.id) ?? [];
+
+            return (
+              <div className="instrumentos-family" key={familia.id}>
+                <div className="instrumentos-family-header">
+                  <div>
+                    <span className="instrumentos-level-label">
+                      FAMILIA
+                    </span>
+                    <h2>{familia.nombre}</h2>
+                    <span className="instrumentos-count">
+                      {familia._count.seccion}{" "}
+                      {familia._count.seccion === 1
+                        ? "sección"
+                        : "secciones"}
+                    </span>
+                  </div>
+
+                  <div className="instrumentos-header-actions">
+                    <button
+                      type="button"
+                      className="instrumentos-secondary-button"
+                      onClick={() => abrirEditarFamilia(familia)}
+                    >
+                      Editar
+                    </button>
+
+                    <button
+                      type="button"
+                      className="instrumentos-secondary-button"
+                      onClick={() => abrirModalSeccion(familia)}
+                    >
+                      + Nueva sección
+                    </button>
+                  </div>
+                </div>
+
+                {seccionesFamilia.length === 0 ? (
+                  <div className="instrumentos-family-empty">
+                    No hay secciones en esta familia.
+                  </div>
+                ) : (
+                  <div className="instrumentos-sections">
+                    {seccionesFamilia.map((seccion) => {
+                      const instrumentosSeccion =
+                        instrumentosPorSeccion.get(seccion.id) ?? [];
+
+                      return (
+                        <div
+                          className="instrumentos-section"
+                          key={seccion.id}
+                        >
+                          <div className="instrumentos-section-header">
+                            <div>
+                              <span className="instrumentos-level-label">
+                                SECCIÓN
+                              </span>
+                              <h3>{seccion.nombre}</h3>
+                              <span className="instrumentos-count">
+                                {seccion._count.instrumento}{" "}
+                                {seccion._count.instrumento === 1
+                                  ? "instrumento"
+                                  : "instrumentos"}
+                              </span>
+                            </div>
+
+                            <div className="instrumentos-header-actions">
+                              <button
+                                type="button"
+                                className="instrumentos-secondary-button"
+                                onClick={() =>
+                                  abrirEditarSeccion(seccion)
+                                }
+                              >
+                                Editar
+                              </button>
+
+                              <button
+                                type="button"
+                                className="instrumentos-secondary-button"
+                                onClick={() =>
+                                  abrirModalInstrumento(seccion)
+                                }
+                              >
+                                + Nuevo instrumento
+                              </button>
+                            </div>
+                          </div>
+
+                          {instrumentosSeccion.length === 0 ? (
+                            <div className="instrumentos-section-empty">
+                              No hay instrumentos en esta sección.
+                            </div>
+                          ) : (
+                            <div className="instrumentos-list">
+                              {instrumentosSeccion.map((instrumento) => (
+                                <div
+                                  className="instrumento-row"
+                                  key={instrumento.id}
+                                >
+                                  <div className="instrumento-main">
+                                    <strong>{instrumento.nombre}</strong>
+                                    {instrumento.descripcion && (
+                                      <span>
+                                        {instrumento.descripcion}
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  <div className="instrumento-actions">
+                                    <span
+                                      className={
+                                        instrumento.activo
+                                          ? "instrumento-status activo"
+                                          : "instrumento-status inactivo"
+                                      }
+                                    >
+                                      {instrumento.activo
+                                        ? "Activo"
+                                        : "Inactivo"}
+                                    </span>
+
+                                    <button
+                                      type="button"
+                                      className="instrumento-action-button"
+                                      onClick={() =>
+                                        abrirEditarInstrumento(
+                                          instrumento,
+                                        )
+                                      }
+                                    >
+                                      Editar
+                                    </button>
+
+                                    <button
+                                      type="button"
+                                      className="instrumento-action-button"
+                                      onClick={() =>
+                                        void cambiarEstadoInstrumento(
+                                          instrumento,
+                                        )
+                                      }
+                                    >
+                                      {instrumento.activo
+                                        ? "Desactivar"
+                                        : "Activar"}
+                                    </button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+            {modal && (
+        <div className="instrumentos-modal-backdrop">
+          <div
+            className="instrumentos-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="instrumentos-modal-title"
+          >
+            <div className="instrumentos-modal-header">
+              <div>
+                <span className="instrumentos-level-label">
+                  CONFIGURACIÓN
+                </span>
+                <h2 id="instrumentos-modal-title">{tituloModal}</h2>
+              </div>
+
+              <button
+                type="button"
+                className="instrumentos-modal-close"
+                onClick={cerrarModal}
+                aria-label="Cerrar"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="instrumentos-modal-body">
+              <label>
+                Nombre
+                <input
+                  type="text"
+                  value={nombre}
+                  onChange={(event) => setNombre(event.target.value)}
+                  autoFocus
+                />
+              </label>
+
+              {modal === "instrumento" ||
+              modal === "editar-instrumento" ? (
+                <label>
+                  Sección
+                  <select
+                    value={seccionId}
+                    onChange={(event) =>
+                      setSeccionId(event.target.value)
+                    }
+                  >
+                    <option value="">Selecciona una sección</option>
+                    {secciones.map((seccion) => (
+                      <option key={seccion.id} value={seccion.id}>
+                        {seccion.familia.nombre} · {seccion.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
+
+              {(modal === "seccion" ||
+                modal === "editar-seccion") && (
+                <label>
+                  Familia
+                  <select
+                    value={familiaId}
+                    onChange={(event) =>
+                      setFamiliaId(event.target.value)
+                    }
+                  >
+                    <option value="">Selecciona una familia</option>
+                    {familias.map((familia) => (
+                      <option key={familia.id} value={familia.id}>
+                        {familia.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}            </div>
+
+            <div className="instrumentos-modal-footer">
+              <button
+                type="button"
+                className="instrumentos-secondary-button"
+                onClick={cerrarModal}
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                className="instrumentos-primary-button"
+                onClick={() => void guardar()}
+                disabled={!nombre.trim()}
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
+export default Instrumentos;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

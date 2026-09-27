@@ -1,0 +1,330 @@
+﻿.instrumentos-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.instrumentos-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.instrumentos-header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.instrumentos-header p {
+  margin: 0;
+  color: #667085;
+}
+
+.instrumentos-primary-button,
+.instrumentos-secondary-button,
+.instrumento-action-button {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.instrumentos-primary-button {
+  min-height: 36px;
+  padding: 8px 15px;
+  background: #c6a15b;
+  border-color: #c6a15b;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.instrumentos-primary-button:hover:not(:disabled) {
+  background: #b58f4a;
+  border-color: #b58f4a;
+}
+
+.instrumentos-primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.instrumentos-secondary-button {
+  min-height: 36px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border-color: #d8c7a3;
+  color: #7a6335;
+  font-weight: 500;
+}
+
+.instrumentos-secondary-button:hover {
+  background: #faf7f0;
+  border-color: #c6a15b;
+  color: #6b5429;
+}
+
+.instrumento-action-button {
+  min-height: 32px;
+  padding: 6px 11px;
+  background: #ffffff;
+  border-color: #d8c7a3;
+  color: #7a6335;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.instrumento-action-button:hover {
+  background: #faf7f0;
+  border-color: #c6a15b;
+  color: #6b5429;
+}
+
+.instrumentos-primary-button:focus-visible,
+.instrumentos-secondary-button:focus-visible,
+.instrumento-action-button:focus-visible {
+  outline: 2px solid rgba(198, 161, 91, 0.35);
+  outline-offset: 1px;
+}
+.instrumentos-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(16, 24, 40, 0.45);
+}
+
+.instrumentos-modal {
+  width: min(520px, 100%);
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 20px 40px rgba(16, 24, 40, 0.18);
+}
+
+.instrumentos-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 22px;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.instrumentos-modal-header h2 {
+  margin: 4px 0 0;
+  font-size: 19px;
+}
+
+.instrumentos-modal-close {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #667085;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.instrumentos-modal-close:hover {
+  background: #f2f4f7;
+}
+
+.instrumentos-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px;
+}
+
+.instrumentos-modal-body label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  color: #344054;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.instrumentos-modal-body input,
+.instrumentos-modal-body textarea,
+.instrumentos-modal-body select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d0d5dd;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #ffffff;
+  color: #101828;
+  font: inherit;
+}
+
+.instrumentos-modal-body input:focus,
+.instrumentos-modal-body textarea:focus,
+.instrumentos-modal-body select:focus {
+  outline: 2px solid rgba(187, 165, 214, 0.35);
+  border-color: #bba5d6;
+}
+
+.instrumentos-modal-contexto {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f8f6fb;
+  color: #667085;
+  font-size: 13px;
+}
+
+.instrumentos-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 22px;
+  border-top: 1px solid #eaecf0;
+}
+
+.instrumentos-family {
+  margin-bottom: 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.instrumentos-family:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.instrumentos-family-header,
+.instrumentos-section-header,
+.instrumento-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.instrumentos-family-header {
+  margin-bottom: 20px;
+}
+
+.instrumentos-family-header > div:first-child,
+.instrumentos-section-header > div:first-child,
+.instrumento-main {
+  min-width: 0;
+}
+
+.instrumentos-section {
+  margin-left: 24px;
+  margin-bottom: 24px;
+}
+
+.instrumentos-section:last-child {
+  margin-bottom: 0;
+}
+
+.instrumentos-section-header {
+  margin-bottom: 12px;
+}
+
+.instrumentos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.instrumento-row {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 16px;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.instrumento-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.instrumento-main span {
+  color: #667085;
+  font-size: 13px;
+}
+
+.instrumentos-header-actions,
+.instrumento-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+@media (max-width: 800px) {
+  .instrumentos-header,
+  .instrumentos-section-header,
+  .instrumentos-family-header,
+  .instrumento-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .instrumentos-actions {
+    width: 100%;
+  }
+
+  .instrumento-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+}
+
+.instrumentos-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #667085;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.instrumentos-back-button:hover {
+  color: #344054;
+}
+
+
+
+
+
+.instrumento-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.instrumento-status.activo {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.instrumento-status.inactivo {
+  background: #f2f4f7;
+  color: #667085;
+}

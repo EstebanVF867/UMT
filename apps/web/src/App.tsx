@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BrowserRouter,
   Navigate,
@@ -20,6 +20,9 @@ import NuevoMusico from "./pages/Miembros/Musicos/NuevoMusico";
 import MusicoExpediente from "./pages/Miembros/Musicos/MusicoExpediente";
 import EditarMusico from "./pages/Miembros/Musicos/EditarMusico";
 import DarDeBajaMusico from "./pages/Miembros/Musicos/DarDeBajaMusico";
+import Directores from "./pages/Miembros/Directores/Directores";
+import NuevoDirector from "./pages/Miembros/Directores/NuevoDirector";
+import DirectorExpediente from "./pages/Miembros/Directores/DirectorExpediente";
 import Configuracion from "./pages/Configuracion/Configuracion";
 import Instrumentos from "./pages/Configuracion/Instrumentos";
 import Agrupaciones from "./pages/Configuracion/Agrupaciones";
@@ -57,7 +60,7 @@ function App() {
       setError(
         err instanceof Error
           ? err.message
-          : "No se ha podido cerrar la sesión.",
+          : "No se ha podido cerrar la sesiÃ³n.",
       );
     } finally {
       setCerrandoSesion(false);
@@ -65,7 +68,7 @@ function App() {
   }
 
   if (comprobandoSesion) {
-    return <main>Comprobando sesión...</main>;
+    return <main>Comprobando sesiÃ³n...</main>;
   }
 
   if (!sesionActiva) {
@@ -103,7 +106,9 @@ function App() {
       <Route path="/miembros/alumnos/:id" element={<AlumnoExpediente />} />
       <Route path="/miembros/alumnos/:id/dar-de-baja" element={<DarDeBajaAlumno />} />
       <Route path="/miembros/alumnos/:id/editar" element={<EditarAlumno />} />
-          <Route path="/miembros/director" element={<Placeholder />} />
+          <Route path="/miembros/directores" element={<Directores />} />
+          <Route path="/miembros/directores/nuevo" element={<NuevoDirector />} />
+          <Route path="/miembros/directores/:id" element={<DirectorExpediente />} />
           <Route path="/profesores" element={<Placeholder />} />
           <Route path="/cuotas" element={<Placeholder />} />
           <Route path="/rrhh/contratos" element={<Placeholder />} />

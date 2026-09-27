@@ -1,4 +1,4 @@
-﻿import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import "./AppLayout.css";
 
 interface AppLayoutProps {
@@ -17,7 +17,7 @@ const menu = [
     children: [
       { label: "Músicos", path: "/miembros/musicos" },
       { label: "Alumnos", path: "/miembros/alumnos" },
-      { label: "Director", path: "/miembros/director" },
+      { label: "Directores", path: "/miembros/directores" },
     ],
   },
   {

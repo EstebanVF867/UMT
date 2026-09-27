@@ -1,0 +1,31 @@
+﻿# Dependencias
+node_modules/
+
+# Builds y archivos generados
+dist/
+build/
+coverage/
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Archivos temporales
+.tmp-*
+tmp-*
+*.tmp
+
+# Backups locales
+_backup-*/
+
+# Logs
+*.log
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Backups y archivos temporales de desarrollo
+*.bak-*
+consultar-roles-temporal.*

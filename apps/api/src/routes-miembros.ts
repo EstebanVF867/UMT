@@ -1,4 +1,4 @@
-import type { FastifyInstance } from "fastify";
+﻿import type { FastifyInstance } from "fastify";
 import { crearMusico } from "./lib/crear-musico.js";
 import { editarMusico } from "./lib/editar-musico.js";
 import { listarMusicos, obtenerMusico } from "./lib/miembros.js";
@@ -17,6 +17,7 @@ import {
 } from "./lib/periodos-alumno.js";
 
 import { crearDirector } from "./lib/crear-director.js";
+import { editarDirector } from "./lib/editar-director.js";
 import {
   listarDirectores,
   obtenerDirector,
@@ -108,7 +109,7 @@ function convertirFecha(
   const partes = fecha.split("-");
 
   if (partes.length !== 3) {
-    throw new Error("El formato de fecha no es válido.");
+    throw new Error("El formato de fecha no es vÃ¡lido.");
   }
 
   const anio = Number(partes[0]);
@@ -120,7 +121,7 @@ function convertirFecha(
     !Number.isInteger(mes) ||
     !Number.isInteger(dia)
   ) {
-    throw new Error("El formato de fecha no es válido.");
+    throw new Error("El formato de fecha no es vÃ¡lido.");
   }
 
   const resultado = new Date(
@@ -132,7 +133,7 @@ function convertirFecha(
     resultado.getUTCMonth() !== mes - 1 ||
     resultado.getUTCDate() !== dia
   ) {
-    throw new Error("La fecha indicada no es válida.");
+    throw new Error("La fecha indicada no es vÃ¡lida.");
   }
 
   return resultado;
@@ -219,7 +220,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
         return reply.code(400).send({
           error:
             error.message ||
-            "Error al obtener la lista de músicos.",
+            "Error al obtener la lista de mÃºsicos.",
         });
       }
     },
@@ -233,7 +234,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
 
         if (!musico) {
           return reply.code(404).send({
-            error: "El músico no existe.",
+            error: "El mÃºsico no existe.",
           });
         }
 
@@ -242,7 +243,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
         return reply.code(400).send({
           error:
             error.message ||
-            "Error al obtener el expediente del músico.",
+            "Error al obtener el expediente del mÃºsico.",
         });
       }
     },
@@ -264,7 +265,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
       return reply.code(201).send(resultado);
     } catch (error: any) {
       return reply.code(400).send({
-        error: error.message || "Error al crear el músico.",
+        error: error.message || "Error al crear el mÃºsico.",
       });
     }
   });
@@ -314,7 +315,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
       } catch (error: any) {
         return reply.code(400).send({
           error:
-            error.message || "Error al editar el músico.",
+            error.message || "Error al editar el mÃºsico.",
         });
       }
     },
@@ -333,7 +334,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
       } catch (error: any) {
         return reply.code(400).send({
           error:
-            error.message || "Error al registrar el período.",
+            error.message || "Error al registrar el perÃ­odo.",
         });
       }
     },
@@ -357,7 +358,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
       } catch (error: any) {
         return reply.code(400).send({
           error:
-            error.message || "Error al cerrar el período.",
+            error.message || "Error al cerrar el perÃ­odo.",
         });
       }
     },
@@ -522,7 +523,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
       } catch (error: any) {
         return reply.code(400).send({
           error:
-            error.message || "Error al registrar el período.",
+            error.message || "Error al registrar el perÃ­odo.",
         });
       }
     },
@@ -546,7 +547,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
       } catch (error: any) {
         return reply.code(400).send({
           error:
-            error.message || "Error al cerrar el período.",
+            error.message || "Error al cerrar el perÃ­odo.",
         });
       }
     },
@@ -643,7 +644,36 @@ export async function miembrosRoutes(app: FastifyInstance) {
       });
     }
   });
+  app.patch<{ Params: { id: string } }>(
+    "/directores/:id",
+    async (request, reply) => {
+      try {
+        const body = request.body as any;
 
+        const resultado = await editarDirector({
+          directorId: request.params.id,
+          nombre: body.nombre,
+          apellidos: body.apellidos,
+          dni: body.dni,
+          fechaNacimiento: convertirFecha(body.fechaNacimiento),
+          email: body.email,
+          telefono: body.telefono,
+          observacionesPersona: body.observacionesPersona,
+          observacionesDirector: body.observacionesDirector,
+          agrupacionIds: body.agrupacionIds,
+          observacionesPeriodo: body.observacionesPeriodo,
+        });
+
+        return reply.send(resultado);
+      } catch (error: any) {
+        return reply.code(400).send({
+          error:
+            error.message ||
+            "Error al editar el director.",
+        });
+      }
+    },
+  );
   app.post<{ Params: PeriodoParams }>(
     "/directores/:id/periodos",
     async (request, reply) => {
@@ -662,7 +692,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
       } catch (error: any) {
         return reply.code(400).send({
           error:
-            error.message || "Error al registrar el período.",
+            error.message || "Error al registrar el perÃ­odo.",
         });
       }
     },
@@ -686,7 +716,7 @@ export async function miembrosRoutes(app: FastifyInstance) {
       } catch (error: any) {
         return reply.code(400).send({
           error:
-            error.message || "Error al cerrar el período.",
+            error.message || "Error al cerrar el perÃ­odo.",
         });
       }
     },
@@ -715,3 +745,4 @@ export async function miembrosRoutes(app: FastifyInstance) {
     },
   );
 }
+

@@ -1,0 +1,297 @@
+.musico-expediente-page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.musico-expediente-header {
+  margin-bottom: 28px;
+}
+
+.musico-expediente-breadcrumb {
+  margin-bottom: 8px;
+  color: var(--umt-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.musico-expediente-back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #667085;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.musico-expediente-back-button:hover {
+  color: #344054;
+}
+
+.musico-expediente-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.musico-expediente-header h1 {
+  margin: 0 0 8px;
+  color: var(--umt-text);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.musico-expediente-header p {
+  margin: 0;
+  color: var(--umt-text-muted);
+  font-size: 14px;
+}
+
+.musico-expediente-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.musico-expediente-card {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--umt-border);
+  border-radius: 10px;
+  background: var(--umt-surface);
+}
+
+.musico-expediente-card-header {
+  margin-bottom: 22px;
+}
+
+.musico-expediente-level {
+  display: block;
+  margin-bottom: 5px;
+  color: #7a6335;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.musico-expediente-card h2 {
+  margin: 0;
+  color: var(--umt-text);
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.musico-expediente-data-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.musico-expediente-data,
+.musico-expediente-data-grid > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.musico-expediente-data-full {
+  grid-column: 1 / -1;
+}
+
+.musico-expediente-data-grid > div span {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--umt-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.musico-expediente-data-grid > div strong {
+  display: block;
+  margin: 0;
+  color: var(--umt-text);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.musico-expediente-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  box-sizing: border-box;
+  padding: 4px 9px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.musico-expediente-status.activo {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.musico-expediente-status.inactivo {
+  background: #f2f4f7;
+  color: #667085;
+}
+
+.musico-expediente-title-row > .musico-expediente-status {
+  margin-top: 3px;
+}
+
+.musico-expediente-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.musico-expediente-period-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #667085;
+  font-size: 13px;
+}
+
+.musico-expediente-period-summary strong {
+  color: #101828;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.musico-expediente-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.musico-expediente-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  border: 1px solid #d8c7a3;
+  border-radius: 6px;
+  background: #faf7f0;
+  color: #7a6335;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.musico-expediente-empty,
+.musico-expediente-feedback,
+.musico-expediente-error {
+  padding: 24px;
+  border: 1px solid var(--umt-border);
+  border-radius: 10px;
+  background: var(--umt-surface);
+  color: var(--umt-text-secondary);
+  font-size: 14px;
+}
+
+.musico-expediente-error {
+  color: #b42318;
+  border-color: #fecdca;
+  background: #fef3f2;
+}
+
+.musico-expediente-history {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.musico-expediente-history-item {
+  padding: 16px;
+  border: 1px solid #eaecf0;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.musico-expediente-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.musico-expediente-history-header strong {
+  color: #101828;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.musico-expediente-history-content {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.musico-expediente-history-content > div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.musico-expediente-history-content > div:first-child {
+  grid-column: 1 / -1;
+}
+
+.musico-expediente-history-content span {
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.musico-expediente-history-content strong {
+  color: #101828;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 850px) {
+  .musico-expediente-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 650px) {
+  .musico-expediente-title-row,
+  .musico-expediente-history-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .musico-expediente-data-grid,
+  .musico-expediente-history-content {
+    grid-template-columns: 1fr;
+  }
+
+  .musico-expediente-data-full,
+  .musico-expediente-history-content > div:first-child {
+    grid-column: auto;
+  }
+}

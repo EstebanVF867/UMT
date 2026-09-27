@@ -1,4 +1,4 @@
-﻿export interface LoginResponse {
+export interface LoginResponse {
   usuario: {
     id: string;
     personaId: string;
@@ -229,7 +229,7 @@ export async function iniciarSesion(
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido iniciar sesión",
+        : "No se ha podido iniciar sesiÃ³n",
     );
   }
 
@@ -252,7 +252,7 @@ export async function obtenerSesion(): Promise<SesionUsuario | null> {
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido comprobar la sesión",
+        : "No se ha podido comprobar la sesiÃ³n",
     );
   }
 
@@ -271,7 +271,7 @@ export async function cerrarSesion(): Promise<void> {
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido cerrar la sesión",
+        : "No se ha podido cerrar la sesiÃ³n",
     );
   }
 }
@@ -320,7 +320,7 @@ export async function listarMusicos(
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido cargar el listado de músicos",
+        : "No se ha podido cargar el listado de mÃºsicos",
     );
   }
 
@@ -417,7 +417,7 @@ export async function crearConfiguracionAgrupacion(input: {
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido crear la agrupación.",
+        : "No se ha podido crear la agrupaciÃ³n.",
     );
   }
 
@@ -447,7 +447,7 @@ export async function editarConfiguracionAgrupacion(
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido editar la agrupación.",
+        : "No se ha podido editar la agrupaciÃ³n.",
     );
   }
 
@@ -546,7 +546,7 @@ export async function obtenerMusico(
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido cargar el expediente del músico.",
+        : "No se ha podido cargar el expediente del mÃºsico.",
     );
   }
 
@@ -839,7 +839,7 @@ export async function crearMusico(
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido crear el músico",
+        : "No se ha podido crear el mÃºsico",
     );
   }
 
@@ -863,7 +863,7 @@ export async function editarMusico(
     const data = await response.json().catch(() => null);
 
     throw new Error(
-      data?.error || "No se ha podido editar el músico.",
+      data?.error || "No se ha podido editar el mÃºsico.",
     );
   }
 
@@ -1008,7 +1008,7 @@ export async function crearConfiguracionSeccion(
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido crear la sección.",
+        : "No se ha podido crear la secciÃ³n.",
     );
   }
 
@@ -1122,7 +1122,7 @@ export async function editarConfiguracionSeccion(
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido editar la sección.",
+        : "No se ha podido editar la secciÃ³n.",
     );
   }
 
@@ -1188,7 +1188,7 @@ export async function darDeBajaMusico(
     throw new Error(
       typeof data?.error === "string"
         ? data.error
-        : "No se ha podido dar de baja al músico.",
+        : "No se ha podido dar de baja al mÃºsico.",
     );
   }
 
@@ -1209,3 +1209,222 @@ export async function darDeBajaMusico(
 
 
 
+
+export interface PersonaDisponibleParaDirector {
+  id: string;
+  nombre: string;
+  apellidos: string;
+  dni: string | null;
+  email: string | null;
+  telefono: string | null;
+  activo: boolean;
+  roles: {
+    codigo: string;
+    nombre: string;
+  }[];
+}
+
+export interface CrearDirectorInput {
+  personaId?: string;
+  nombre: string;
+  apellidos: string;
+  dni?: string;
+  fechaNacimiento?: string;
+  email?: string;
+  telefono?: string;
+  observacionesPersona?: string;
+  fechaInicio: string;
+  agrupacionIds: string[];
+  observacionesPeriodo?: string;
+  observacionesDirector?: string;
+}
+
+export async function buscarPersonasDisponiblesParaDirector(
+  busqueda: string,
+): Promise<PersonaDisponibleParaDirector[]> {
+  const params = new URLSearchParams();
+
+  if (busqueda.trim()) {
+    params.set("busqueda", busqueda.trim());
+  }
+
+  const query = params.toString();
+
+  const response = await fetch(
+    `/api/miembros/personas-disponibles-para-director${
+      query ? `?${query}` : ""
+    }`,
+    {
+      method: "GET",
+      credentials: "include",
+    },
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data?.error === "string"
+        ? data.error
+        : "No se han podido buscar personas disponibles para director.",
+    );
+  }
+
+  return data as PersonaDisponibleParaDirector[];
+}
+
+export async function crearDirector(
+  input: CrearDirectorInput,
+): Promise<unknown> {
+  const response = await fetch("/api/miembros/directores", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(input),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data?.error === "string"
+        ? data.error
+        : "No se ha podido crear el director.",
+    );
+  }
+
+  return data.director;
+}
+
+export interface DirectorListado {
+  id: string;
+  personaId: string;
+  nombre: string;
+  apellidos: string;
+  dni: string | null;
+  activo: boolean;
+  fechaAlta: string;
+  agrupaciones: {
+    id: string;
+    nombre: string;
+  }[];
+  periodoActual: {
+    id: string;
+    fechaInicio: string;
+    fechaFin: string | null;
+    motivoBaja: string | null;
+  } | null;
+}
+
+export interface FiltrosListarDirectores {
+  estado?: "TODOS" | "ACTIVO" | "BAJA";
+  busqueda?: string;
+  agrupacionId?: string;
+}
+
+export async function listarDirectores(
+  filtros: FiltrosListarDirectores = {},
+): Promise<DirectorListado[]> {
+  const params = new URLSearchParams();
+
+  if (filtros.estado && filtros.estado !== "TODOS") {
+    params.set("estado", filtros.estado);
+  }
+
+  if (filtros.busqueda?.trim()) {
+    params.set("busqueda", filtros.busqueda.trim());
+  }
+
+  if (filtros.agrupacionId) {
+    params.set("agrupacionId", filtros.agrupacionId);
+  }
+
+  const query = params.toString();
+
+  const response = await fetch(
+    `/api/miembros/directores${query ? `?${query}` : ""}`,
+    {
+      method: "GET",
+      credentials: "include",
+    },
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data?.error === "string"
+        ? data.error
+        : "No se ha podido cargar el listado de directores.",
+    );
+  }
+
+  return data.directores as DirectorListado[];
+}
+
+export interface DirectorExpediente {
+  id: string;
+  personaId: string;
+  persona: {
+    id: string;
+    nombre: string;
+    apellidos: string;
+    dni: string | null;
+    fechaNacimiento: string | null;
+    email: string | null;
+    telefono: string | null;
+    observaciones: string | null;
+    activo: boolean;
+    fechaBaja: string | null;
+  };
+  director: {
+    fechaAlta: string;
+    fechaBaja: string | null;
+    activo: boolean;
+    observaciones: string | null;
+  };
+  periodos: {
+    id: string;
+    fechaInicio: string;
+    fechaFin: string | null;
+    motivoBaja: string | null;
+    observaciones: string | null;
+    agrupaciones: {
+      id: string;
+      agrupacion: {
+        id: string;
+        nombre: string;
+      };
+    }[];
+  }[];
+  roles: {
+    id: string;
+    codigo: string;
+    nombre: string;
+    descripcion: string | null;
+    activo: boolean;
+  }[];
+}
+
+export async function obtenerDirector(
+  id: string,
+): Promise<DirectorExpediente> {
+  const response = await fetch(`/api/miembros/directores/${id}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data?.error === "string"
+        ? data.error
+        : "No se ha podido cargar el expediente del director.",
+    );
+  }
+
+  return data as DirectorExpediente;
+}
